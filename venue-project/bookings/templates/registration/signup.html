@@ -1,0 +1,20 @@
+{% extends "bookings/base.html" %}
+{% block title %}Sign up — Commons{% endblock %}
+{% block content %}
+    <h1>Create an account</h1>
+    <form method="post" class="sidebar-card" style="max-width:380px;">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}<div class="space-meta" style="font-size:0.8rem;">{{ field.help_text }}</div>{% endif %}
+                {% if field.errors %}
+                    <ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Sign up</button>
+    </form>
+    <p style="margin-top:1rem;">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+{% endblock %}

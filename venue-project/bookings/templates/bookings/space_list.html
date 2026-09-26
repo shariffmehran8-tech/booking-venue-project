@@ -1,0 +1,38 @@
+{% extends "bookings/base.html" %}
+{% block title %}Spaces — Commons{% endblock %}
+{% block content %}
+    <h1>Find a space</h1>
+    <p>Desks, meeting rooms, and event halls, ready when you are.</p>
+
+    <div class="filter-bar">
+        <a href="{% url 'space_list' %}" class="filter-chip {% if not selected_type %}active{% endif %}">All</a>
+        {% for value, label in space_types %}
+            <a href="?type={{ value }}" class="filter-chip {% if selected_type == value %}active{% endif %}">{{ label }}</a>
+        {% endfor %}
+    </div>
+
+    {% if spaces %}
+        <div class="space-grid">
+            {% for space in spaces %}
+                <a href="{% url 'space_detail' space.pk %}" class="space-card">
+                    <div class="space-card-img">
+                        {% if space.image %}
+                            <img src="{{ space.image.url }}" alt="{{ space.name }}">
+                        {% else %}
+                            {{ space.name|slice:":1" }}
+                        {% endif %}
+                    </div>
+                    <div class="space-card-body">
+                        <h3>{{ space.name }}</h3>
+                        <div class="space-meta">{{ space.get_space_type_display }} · Seats {{ space.capacity }}</div>
+                        <div class="space-price">₹{{ space.price_per_hour }} / hour</div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No spaces match that filter yet.</p>
+        </div>
+    {% endif %}
+{% endblock %}

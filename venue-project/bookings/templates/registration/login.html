@@ -1,0 +1,20 @@
+{% extends "bookings/base.html" %}
+{% block title %}Log in — Commons{% endblock %}
+{% block content %}
+    <h1>Log in</h1>
+    {% if form.errors %}
+        <ul class="non-field-errors"><li>Your username and password didn't match. Try again.</li></ul>
+    {% endif %}
+    <form method="post" class="sidebar-card" style="max-width:380px;">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Log in</button>
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+    <p style="margin-top:1rem;">New here? <a href="{% url 'signup' %}">Create an account</a></p>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "bookings/base.html" %}
+{% block title %}{{ space.name }} — Commons{% endblock %}
+{% block content %}
+    <p><a href="{% url 'space_list' %}">&larr; All spaces</a></p>
+
+    <div class="detail-layout">
+        <div>
+            <div class="detail-hero">
+                {% if space.image %}
+                    <img src="{{ space.image.url }}" alt="{{ space.name }}">
+                {% endif %}
+            </div>
+            <h1>{{ space.name }}</h1>
+            <p class="space-meta">{{ space.get_space_type_display }} · Seats {{ space.capacity }} · ₹{{ space.price_per_hour }}/hour</p>
+            <p>{{ space.description }}</p>
+
+            {% if space.amenity_list %}
+                <h3>Amenities</h3>
+                <ul class="amenity-list">
+                    {% for a in space.amenity_list %}<li>{{ a }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <aside class="sidebar-card">
+            <h3>Book this space</h3>
+            <p>Pick a date and time on the next step. We'll confirm as soon as it's available.</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'book_space' space.pk %}" class="btn btn-primary">Request a booking</a>
+            {% else %}
+                <a href="{% url 'login' %}?next={% url 'book_space' space.pk %}" class="btn btn-primary">Log in to book</a>
+            {% endif %}
+
+            {% if upcoming_bookings %}
+                <h3 style="margin-top:1.5rem;">Already booked</h3>
+                <ul class="upcoming-list">
+                    {% for b in upcoming_bookings %}
+                        <li>{{ b.date }} · {{ b.start_time|time:"H:i" }}–{{ b.end_time|time:"H:i" }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </aside>
+    </div>
+{% endblock %}
